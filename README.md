@@ -144,9 +144,6 @@ Compatible with any Node.js hosting platform that supports:
 ```env
 # Required
 DATABASE_URL=your_neon_connection_string
-
-# Optional (for production)
-NEXT_PUBLIC_BASE_URL=https://yourdomain.com
 ```
 
 ### Customization
@@ -187,10 +184,6 @@ This project was developed with assistance from **Amazon Q Developer** (not Chat
 **Note**: This project was built using Amazon Q Developer within the IDE environment, which provides contextual assistance and code generation. No external ChatGPT conversation was used.
 
 Special thanks to Amazon Q Developer for guidance on modern web development patterns and user experience design.
-
-## 📄 License
-
-MIT License - feel free to use this project for personal or commercial purposes.
 
 ## 🐛 Issues & Contributing
 
