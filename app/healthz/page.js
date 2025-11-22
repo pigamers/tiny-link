@@ -94,11 +94,6 @@ export default async function HealthPage() {
             </div>
           </div>
         </div>
-
-        <div className="mt-8 bg-gray-50 p-4 rounded-lg">
-          <h4 className="font-medium text-gray-900 mb-2">Last Updated</h4>
-          <p className="text-gray-600">{systemInfo.timestamp}</p>
-        </div>
       </div>
     )
   } catch (error) {
