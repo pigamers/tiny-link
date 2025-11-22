@@ -41,8 +41,8 @@ export default function Dashboard() {
   }
 
   const validateCode = (value) => {
-    if (value && !/^[A-Za-z0-9]{6,12}$/.test(value)) {
-      setCodeError('Code must be 6-12 alphanumeric characters')
+    if (value && !/^[A-Za-z0-9]{6,8}$/.test(value)) {
+      setCodeError('Code must be 6-8 alphanumeric characters')
       return false
     }
     setCodeError('')
@@ -154,7 +154,7 @@ export default function Dashboard() {
                   setNewCustomCode(e.target.value)
                   if (e.target.value) validateCode(e.target.value)
                 }}
-                placeholder="Custom code (optional, 6-12 characters)"
+                placeholder="Custom code (optional, 6-8 characters)"
                 className={`w-full px-4 py-2 border rounded-lg ${codeError ? 'border-red-300' : 'border-gray-300'}`}
               />
               {codeError && <p className="mt-1 text-sm text-red-600">{codeError}</p>}
