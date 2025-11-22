@@ -249,8 +249,7 @@ export default function Dashboard() {
       
       {filteredLinks.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-600 mb-4">{searchTerm ? 'No links match your search.' : 'No links created yet.'}</p>
-          {!searchTerm && <a href="/" className="text-blue-600 hover:underline">Create your first link</a>}
+          <p className="text-gray-600">{searchTerm ? 'No links match your search.' : 'No links created yet.'}</p>
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow overflow-hidden">
