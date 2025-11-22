@@ -17,6 +17,13 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchLinks()
+    
+    // Auto-refresh every 5 seconds
+    const interval = setInterval(() => {
+      fetchLinks()
+    }, 5000)
+    
+    return () => clearInterval(interval)
   }, [])
 
   useEffect(() => {

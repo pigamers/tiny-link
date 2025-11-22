@@ -1,12 +1,41 @@
-import { getLink } from '../../../lib/db'
-import { notFound } from 'next/navigation'
+'use client'
+import { useState, useEffect } from 'react'
+import { useParams } from 'next/navigation'
 
-export default async function StatsPage({ params }) {
-  const { code } = await params
-  const link = await getLink(code)
+export default function StatsPage() {
+  const params = useParams()
+  const [link, setLink] = useState(null)
+  const [loading, setLoading] = useState(true)
+  
+  const fetchLink = async () => {
+    try {
+      const res = await fetch(`/api/links`)
+      const links = await res.json()
+      const foundLink = links.find(l => l.short_code === params.code)
+      setLink(foundLink)
+    } catch (error) {
+      console.error('Error fetching link:', error)
+    }
+    setLoading(false)
+  }
+  
+  useEffect(() => {
+    fetchLink()
+    
+    // Auto-refresh every 3 seconds
+    const interval = setInterval(() => {
+      fetchLink()
+    }, 3000)
+    
+    return () => clearInterval(interval)
+  }, [params.code])
+  
+  if (loading) {
+    return <div className="text-center py-12">Loading...</div>
+  }
   
   if (!link) {
-    notFound()
+    return <div className="text-center py-12">Link not found</div>
   }
 
   return (
