@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
                 <a href="/" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
                   Dashboard
                 </a>
-                <a href="/api/health" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
+                <a href="/healthz" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
                   Status
                 </a>
               </div>
@@ -46,8 +46,8 @@ export default function RootLayout({ children }) {
                 <span>© 2024 TinyLink. Simple URL shortening.</span>
               </div>
               <div className="flex items-center gap-4 text-sm">
-                <a href="/api/health" className="text-gray-600 hover:text-blue-600 transition-colors">
-                  API Health
+                <a href="/healthz" className="text-gray-600 hover:text-blue-600 transition-colors">
+                  System Health
                 </a>
                 <span className="text-gray-400">|</span>
                 <span className="text-gray-600">Built with Next.js & Neon</span>
