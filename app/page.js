@@ -14,31 +14,18 @@ export default function Dashboard() {
   const [success, setSuccess] = useState('')
   const [urlError, setUrlError] = useState('')
   const [codeError, setCodeError] = useState('')
-  const [sortField, setSortField] = useState('created_at')
-  const [sortOrder, setSortOrder] = useState('desc')
-  const [copySuccess, setCopySuccess] = useState(false)
 
   useEffect(() => {
     fetchLinks()
   }, [])
 
   useEffect(() => {
-    let filtered = links.filter(link => 
+    const filtered = links.filter(link => 
       link.short_code.toLowerCase().includes(searchTerm.toLowerCase()) ||
       link.original_url.toLowerCase().includes(searchTerm.toLowerCase())
     )
-    
-    filtered.sort((a, b) => {
-      const aVal = a[sortField]
-      const bVal = b[sortField]
-      if (sortOrder === 'asc') {
-        return aVal > bVal ? 1 : -1
-      }
-      return aVal < bVal ? 1 : -1
-    })
-    
     setFilteredLinks(filtered)
-  }, [links, searchTerm, sortField, sortOrder])
+  }, [links, searchTerm])
 
   const validateUrl = (value) => {
     if (!value) {
@@ -62,25 +49,6 @@ export default function Dashboard() {
     return true
   }
 
-  const copyToClipboard = async (text) => {
-    try {
-      await navigator.clipboard.writeText(text)
-      setCopySuccess(true)
-      setTimeout(() => setCopySuccess(false), 2000)
-    } catch (error) {
-      setError('Failed to copy to clipboard')
-    }
-  }
-
-  const handleSort = (field) => {
-    if (sortField === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
-    } else {
-      setSortField(field)
-      setSortOrder('desc')
-    }
-  }
-
   const fetchLinks = async () => {
     try {
       const res = await fetch('/api/links')
@@ -97,19 +65,14 @@ export default function Dashboard() {
     
     try {
       const res = await fetch(`/api/links/${code}`, { method: 'DELETE' })
-      const data = await res.json()
       
       if (res.ok) {
-        // Remove from local state immediately
         setLinks(prev => prev.filter(link => link.short_code !== code))
-        alert('Link deleted successfully')
       } else {
-        console.error('Delete failed:', data)
-        alert(`Failed to delete link: ${data.error}`)
+        setError('Failed to delete link')
       }
     } catch (error) {
-      console.error('Error deleting link:', error)
-      alert('Error deleting link')
+      setError('Error deleting link')
     }
   }
 
@@ -143,7 +106,7 @@ export default function Dashboard() {
         setError(data.error)
       }
     } catch (error) {
-      setError('Failed to create link. Please try again.')
+      setError('Failed to create link')
     }
     
     setAddLoading(false)
@@ -177,9 +140,8 @@ export default function Dashboard() {
                   setNewUrl(e.target.value)
                   if (e.target.value) validateUrl(e.target.value)
                 }}
-                onBlur={() => validateUrl(newUrl)}
                 placeholder="Enter URL (https://example.com)"
-                className={`w-full px-4 py-2 border rounded-lg ${urlError ? 'border-red-300 bg-red-50' : 'border-gray-300'}`}
+                className={`w-full px-4 py-2 border rounded-lg ${urlError ? 'border-red-300' : 'border-gray-300'}`}
                 required
               />
               {urlError && <p className="mt-1 text-sm text-red-600">{urlError}</p>}
@@ -192,9 +154,8 @@ export default function Dashboard() {
                   setNewCustomCode(e.target.value)
                   if (e.target.value) validateCode(e.target.value)
                 }}
-                onBlur={() => validateCode(newCustomCode)}
                 placeholder="Custom code (optional, 6-12 characters)"
-                className={`w-full px-4 py-2 border rounded-lg ${codeError ? 'border-red-300 bg-red-50' : 'border-gray-300'}`}
+                className={`w-full px-4 py-2 border rounded-lg ${codeError ? 'border-red-300' : 'border-gray-300'}`}
               />
               {codeError && <p className="mt-1 text-sm text-red-600">{codeError}</p>}
             </div>
@@ -212,7 +173,7 @@ export default function Dashboard() {
               <button
                 type="submit"
                 disabled={addLoading || urlError || codeError}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
               >
                 {addLoading ? 'Adding...' : 'Add Link'}
               </button>
@@ -238,22 +199,12 @@ export default function Dashboard() {
         />
       </div>
       
-      {copySuccess && (
-        <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2">
-          <svg className="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-          </svg>
-          <span className="text-green-600">Link copied to clipboard!</span>
-        </div>
-      )}
-      
       {filteredLinks.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-600">{searchTerm ? 'No links match your search.' : 'No links created yet.'}</p>
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow overflow-hidden">
-          {/* Desktop Table */}
           <div className="hidden md:block overflow-x-auto">
             <table className="min-w-full">
               <thead className="bg-gray-50">
@@ -301,7 +252,6 @@ export default function Dashboard() {
             </table>
           </div>
           
-          {/* Mobile Cards */}
           <div className="md:hidden">
             {filteredLinks.map((link) => (
               <div key={link.id} className="p-4 border-b border-gray-200 last:border-b-0">
